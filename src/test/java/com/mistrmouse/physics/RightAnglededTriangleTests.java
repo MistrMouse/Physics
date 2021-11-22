@@ -17,7 +17,7 @@ public class RightAnglededTriangleTests {
 
         // Assertions
         Assert.assertEquals(RightAngledTriangle.solveForMissingAngle(thetaA), thetaB, .0001);
-        Assert.assertEquals(RightAngledTriangle.solveForThetaUsingInverseTan(a, b), thetaA, .0001);
+        Assert.assertEquals(RightAngledTriangle.solveForThetaUsingInverseTan(a, b), thetaA, 0);
         Assert.assertEquals(c, RightAngledTriangle.solveForHypotenuse(a, b), 0);
         Assert.assertEquals(a, RightAngledTriangle.solveForOppositeUsingSin(thetaA, c), 0);
         Assert.assertEquals(a, RightAngledTriangle.solveForOppositeUsingTan(thetaA, b), 0);
