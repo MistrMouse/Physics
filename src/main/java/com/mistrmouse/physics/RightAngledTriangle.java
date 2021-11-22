@@ -15,7 +15,7 @@ public class RightAngledTriangle {
     }
 
     // When dealing with right angles, then we can solve for
-    // sides using Pythagorean Theorum
+    // sides using Pythagorean Theorem
     //      /|
     //   c / | b     a2 + b2 = c2
     //    /__|
