@@ -1,6 +1,5 @@
 package com.mistrmouse.physics;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Distance {
@@ -34,7 +33,7 @@ public class Distance {
     // are touching. This is easy to do with spheres, as we just take
     // the radius of both objects and subtract the sum of both from
     // the distance between the points.
-    public static double betweenSpheres(double r1, double cx1, double cy1, double r2, double cx2, double cy2) {
+    public static double betweenCircles(double r1, double cx1, double cy1, double r2, double cx2, double cy2) {
         return betweenPoints(cx1, cy1, cx2, cy2) - (r1 + r2);
     }
 
@@ -50,34 +49,20 @@ public class Distance {
     // to location of each other
     public static double betweenSquares(double w1, double h1, double cx1, double cy1, double theta1, double w2, double h2, double cx2, double cy2, double theta2) {
         double distance = betweenPoints(cx1, cy1, cx2, cy2);
-        double hW = w1 / 2;
-        double hH = h1 / 2;
-        List<Point> sqr1Points = new ArrayList<>();
-        sqr1Points.add(rotatePoint(cx1 + hW, cy1 + hH, theta1));
-        sqr1Points.add(rotatePoint(cx1 - hW, cy1 + hH, theta1));
-        sqr1Points.add(rotatePoint(cx1 + hW, cy1 - hH, theta1));
-        sqr1Points.add(rotatePoint(cx1 - hW, cy1 - hH, theta1));
 
-        hW = w2 / 2;
-        hH = h2 / 2;
-        List<Point> sqr2Points = new ArrayList<>();
-        sqr2Points.add(rotatePoint(cx2 + hW, cy2 + hH, theta2));
-        sqr2Points.add(rotatePoint(cx2 - hW, cy2 + hH, theta2));
-        sqr2Points.add(rotatePoint(cx2 + hW, cy2 - hH, theta2));
-        sqr2Points.add(rotatePoint(cx2 - hW, cy2 - hH, theta2));
+        List<Point> points1 = Point.getSquareList(w1, h1, cx1, cy1, theta1);
+        List<Point> points2 = Point.getSquareList(w2, h2, cx2, cy2, theta2);
 
-        Point sqrPoint = sqr1Points.get(0);
-        double minX1 = sqrPoint.x, minY1 = sqrPoint.y, maxX1 = minX1, maxY1 = minY1;
-        sqrPoint = sqr2Points.get(0);
-        double minX2 = sqrPoint.x, minY2 = sqrPoint.y, maxX2 = minX2, maxY2 = minY2;
-        for (int i = 1; i < 4; i++) {
-            sqrPoint = sqr1Points.get(i);
+        double minX1 = cx1, minY1 = cy1, maxX1 = minX1, maxY1 = minY1;
+        double minX2 = cx2, minY2 = cy2, maxX2 = minX2, maxY2 = minY2;
+        for (int i = 0; i < 4; i++) {
+            Point sqrPoint = points1.get(i);
             minX1 = Math.min(minX1, sqrPoint.x);
             minY1 = Math.min(minY1, sqrPoint.y);
             maxX1 = Math.max(maxX1, sqrPoint.x);
             maxY1 = Math.max(maxY1, sqrPoint.y);
 
-            sqrPoint = sqr2Points.get(i);
+            sqrPoint = points2.get(i);
             minX2 = Math.min(minX2, sqrPoint.x);
             minY2 = Math.min(minY2, sqrPoint.y);
             maxX2 = Math.max(maxX2, sqrPoint.x);
@@ -86,53 +71,21 @@ public class Distance {
 
         boolean isLeft = (cx1 < cx2);
         boolean isBelow = (cy1 < cy2);
-        double diffX = (isLeft) ? (maxX1 - cx1 + (cx2 - minX2)) : ((cx1 != cx2) ? (cx1 - minX1 + (maxX1 - cy2)) : 0);
+        double diffX = (isLeft) ? (maxX1 - cx1 + (cx2 - minX2)) : ((cx1 != cx2) ? (cx1 - minX1 + (maxX2 - cx2)) : 0);
         double diffY = (isBelow) ? (maxY1 - cy1 + (cy2 - minY2)) : ((cy1 != cy2) ? (cy1 - minY1 + (maxY2 - cy2)) : 0);
-        double diff = RightAngledTriangle.solveForHypotenuse(diffX, diffY);
+        double diff = betweenPoints(0, 0, diffX, diffY);
         return distance - diff;
-    }
-
-    private static Point rotatePoint(double x, double y, double theta) {
-        Point point = new Point();
-        point.x = x * Math.cos(theta) - y * Math.sin(theta);
-        point.y = x * Math.sin(theta) + y * Math.cos(theta);
-        return point;
     }
 
     public static double betweenCubes(double w1, double h1, double d1, double cx1, double cy1, double cz1, double thetaX1, double thetaY1, double thetaZ1, double w2, double h2, double d2, double cx2, double cy2, double cz2, double thetaX2, double thetaY2, double thetaZ2) {
         double distance = betweenPoints(cx1, cy1, cz1, cx2, cy2, cz2);
-        double hW = w1 / 2;
-        double hH = h1 / 2;
-        double hD = d1 / 2;
-        List<Point> sqr1Points = new ArrayList<>();
-        sqr1Points.add(rotatePoint(cx1 + hW, cy1 + hH, cz1 + hD, thetaX1, thetaY1, thetaZ1));
-        sqr1Points.add(rotatePoint(cx1 + hW, cy1 - hH, cz1 - hD, thetaX1, thetaY1, thetaZ1));
-        sqr1Points.add(rotatePoint(cx1 + hW, cy1 + hH, cz1 - hD, thetaX1, thetaY1, thetaZ1));
-        sqr1Points.add(rotatePoint(cx1 + hW, cy1 - hH, cz1 + hD, thetaX1, thetaY1, thetaZ1));
-        sqr1Points.add(rotatePoint(cx1 - hW, cy1 + hH, cz1 + hD, thetaX1, thetaY1, thetaZ1));
-        sqr1Points.add(rotatePoint(cx1 - hW, cy1 - hH, cz1 + hD, thetaX1, thetaY1, thetaZ1));
-        sqr1Points.add(rotatePoint(cx1 - hW, cy1 + hH, cz1 - hD, thetaX1, thetaY1, thetaZ1));
-        sqr1Points.add(rotatePoint(cx1 - hW, cy1 - hH, cz1 - hD, thetaX1, thetaY1, thetaZ1));
+        List<Point> points1 = Point.getCubicList(w1, h1, d1, cx1, cy1, cz1, thetaX1, thetaY1, thetaZ1);
+        List<Point> points2 = Point.getCubicList(w2, h2, d2, cx2, cy2, cz2, thetaX2, thetaY2, thetaZ2);
 
-        hW = w2 / 2;
-        hH = h2 / 2;
-        hD = d2 / 2;
-        List<Point> sqr2Points = new ArrayList<>();
-        sqr2Points.add(rotatePoint(cx2 + hW, cy2 + hH, cz2 + hD, thetaX2, thetaY2, thetaZ2));
-        sqr2Points.add(rotatePoint(cx2 + hW, cy2 - hH, cz2 - hD, thetaX2, thetaY2, thetaZ2));
-        sqr2Points.add(rotatePoint(cx2 + hW, cy2 + hH, cz2 - hD, thetaX2, thetaY2, thetaZ2));
-        sqr2Points.add(rotatePoint(cx2 + hW, cy2 - hH, cz2 + hD, thetaX2, thetaY2, thetaZ2));
-        sqr2Points.add(rotatePoint(cx2 - hW, cy2 + hH, cz2 + hD, thetaX2, thetaY2, thetaZ2));
-        sqr2Points.add(rotatePoint(cx2 - hW, cy2 - hH, cz2 + hD, thetaX2, thetaY2, thetaZ2));
-        sqr2Points.add(rotatePoint(cx2 - hW, cy2 + hH, cz2 - hD, thetaX2, thetaY2, thetaZ2));
-        sqr2Points.add(rotatePoint(cx2 - hW, cy2 - hH, cz2 - hD, thetaX2, thetaY2, thetaZ2));
-
-        Point sqrPoint = sqr1Points.get(0);
-        double minX1 = sqrPoint.x, minY1 = sqrPoint.y, minZ1 = sqrPoint.z, maxX1 = minX1, maxY1 = minY1, maxZ1 = minZ1;
-        sqrPoint = sqr2Points.get(0);
-        double minX2 = sqrPoint.x, minY2 = sqrPoint.y, minZ2 = sqrPoint.z, maxX2 = minX2, maxY2 = minY2, maxZ2 = minZ2;
-        for (int i = 1; i < 4; i++) {
-            sqrPoint = sqr1Points.get(i);
+        double minX1 = cx1, minY1 = cy1, minZ1 = cz1, maxX1 = minX1, maxY1 = minY1, maxZ1 = minZ1;
+        double minX2 = cx2, minY2 = cy2, minZ2 = cz2, maxX2 = minX2, maxY2 = minY2, maxZ2 = minZ2;
+        for (int i = 0; i < 8; i++) {
+            Point sqrPoint = points1.get(i);
             minX1 = Math.min(minX1, sqrPoint.x);
             minY1 = Math.min(minY1, sqrPoint.y);
             minZ1 = Math.min(minZ1, sqrPoint.z);
@@ -140,7 +93,7 @@ public class Distance {
             maxY1 = Math.max(maxY1, sqrPoint.y);
             maxZ1 = Math.max(maxZ1, sqrPoint.z);
 
-            sqrPoint = sqr2Points.get(i);
+            sqrPoint = points2.get(i);
             minX2 = Math.min(minX2, sqrPoint.x);
             minY2 = Math.min(minY2, sqrPoint.y);
             minZ2 = Math.min(minZ2, sqrPoint.z);
@@ -152,26 +105,59 @@ public class Distance {
         boolean isLeft = (cx1 < cx2);
         boolean isBelow = (cy1 < cy2);
         boolean isBehind = (cz1 < cz2);
-        double diffX = (isLeft) ? (maxX1 - cx1 + (cx2 - minX2)) : ((cx1 != cx2) ? (cx1 - minX1 + (maxX1 - cx2)) : 0);
+        double diffX = (isLeft) ? (maxX1 - cx1 + (cx2 - minX2)) : ((cx1 != cx2) ? (cx1 - minX1 + (maxX2 - cx2)) : 0);
         double diffY = (isBelow) ? (maxY1 - cy1 + (cy2 - minY2)) : ((cy1 != cy2) ? (cy1 - minY1 + (maxY2 - cy2)) : 0);
         double diffZ = (isBehind) ? (maxZ1 - cz1 + (cz2 - minZ2)) : ((cz1 != cz2) ? (cz1 - minZ1 + (maxZ2 - cz2)) : 0);
         double diff = betweenPoints(0, 0, 0, diffX, diffY, diffZ);
         return distance - diff;
     }
 
-    private static Point rotatePoint(double x, double y, double z, double thetaX, double thetaY, double thetaZ) {
-        Point point = new Point();
-        point.x = x * Math.cos(thetaX) - y * Math.sin(thetaX);
-        point.y = x * Math.sin(thetaX) + y * Math.cos(thetaX);
-        point.z = z;
+    // Now lets mix and match
+    public static double betweenSquareAndCircle(double w1, double h1, double cx1, double cy1, double theta1, double r2, double cx2, double cy2) {
+        double distance = betweenPoints(cx1, cy1, cx2, cy2);
+        List<Point> points1 = Point.getSquareList(w1, h1, cx1, cy1, theta1);
 
-        y = point.y;
-        point.y = y * Math.cos(thetaY) - point.z * Math.sin(thetaY);
-        point.z = y * Math.sin(thetaY) + point.z * Math.cos(thetaY);
+        double minX1 = cx1, minY1 = cy1, maxX1 = minX1, maxY1 = minY1;
+        double minX2 = cx2 - r2, minY2 = cy2 - r2, maxX2 = cx2 + r2, maxY2 = cy2 + r2;
+        for (int i = 0; i < 4; i++) {
+            Point sqrPoint = points1.get(i);
+            minX1 = Math.min(minX1, sqrPoint.x);
+            minY1 = Math.min(minY1, sqrPoint.y);
+            maxX1 = Math.max(maxX1, sqrPoint.x);
+            maxY1 = Math.max(maxY1, sqrPoint.y);
+        }
 
-        z = point.z;
-        point.z = z * Math.cos(thetaZ) - point.x * Math.sin(thetaZ);
-        point.x = z * Math.sin(thetaZ) + point.x * Math.cos(thetaZ);
-        return point;
+        boolean isLeft = (cx1 < cx2);
+        boolean isBelow = (cy1 < cy2);
+        double diffX = (isLeft) ? (maxX1 - cx1 + (cx2 - minX2)) : ((cx1 != cx2) ? (cx1 - minX1 + (maxX2 - cx2)) : 0);
+        double diffY = (isBelow) ? (maxY1 - cy1 + (cy2 - minY2)) : ((cy1 != cy2) ? (cy1 - minY1 + (maxY2 - cy2)) : 0);
+        double diff = betweenPoints(0, 0, diffX, diffY);
+        return distance - diff;
+    }
+
+    public static double betweenCubeAndSphere(double w1, double h1, double d1, double cx1, double cy1, double cz1, double thetaX1, double thetaY1, double thetaZ1, double r2, double cx2, double cy2, double cz2) {
+        double distance = betweenPoints(cx1, cy1, cz1, cx2, cy2, cz2);
+        List<Point> points = Point.getCubicList(w1, h1, d1, cx1, cy1, cz1, thetaX1, thetaY1, thetaZ1);
+
+        double minX1 = cx1, minY1 = cy1, minZ1 = cz1, maxX1 = minX1, maxY1 = minY1, maxZ1 = minZ1;
+        double minX2 = cx2 - r2, minY2 = cy2 - r2, minZ2 = cz2 - r2, maxX2 = cx2 + r2, maxY2 = cy2 + r2, maxZ2 = cz2 + r2;
+        for (int i = 0; i < 8; i++) {
+            Point sqrPoint = points.get(i);
+            minX1 = Math.min(minX1, sqrPoint.x);
+            minY1 = Math.min(minY1, sqrPoint.y);
+            minZ1 = Math.min(minZ1, sqrPoint.z);
+            maxX1 = Math.max(maxX1, sqrPoint.x);
+            maxY1 = Math.max(maxY1, sqrPoint.y);
+            maxZ1 = Math.max(maxZ1, sqrPoint.z);
+        }
+
+        boolean isLeft = (cx1 < cx2);
+        boolean isBelow = (cy1 < cy2);
+        boolean isBehind = (cz1 < cz2);
+        double diffX = (isLeft) ? (maxX1 - cx1 + (cx2 - minX2)) : ((cx1 != cx2) ? (cx1 - minX1 + (maxX2 - cx2)) : 0);
+        double diffY = (isBelow) ? (maxY1 - cy1 + (cy2 - minY2)) : ((cy1 != cy2) ? (cy1 - minY1 + (maxY2 - cy2)) : 0);
+        double diffZ = (isBehind) ? (maxZ1 - cz1 + (cz2 - minZ2)) : ((cz1 != cz2) ? (cz1 - minZ1 + (maxZ2 - cz2)) : 0);
+        double diff = betweenPoints(0, 0, 0, diffX, diffY, diffZ);
+        return distance - diff;
     }
 }
