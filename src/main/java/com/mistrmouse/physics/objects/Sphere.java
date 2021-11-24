@@ -6,8 +6,8 @@ import com.mistrmouse.physics.PhysicsObject3D;
 public class Sphere extends PhysicsObject3D {
     private double r;
 
-    public Sphere(double r, double cx, double cy, double cz, double thetaX, double thetaY, double thetaZ) {
-        super(cx, cy, cz, thetaX, thetaY, thetaZ);
+    public Sphere(double density, double r, double cx, double cy, double cz, double thetaX, double thetaY, double thetaZ) {
+        super(calculateVolume(r), density, cx, cy, cz, thetaX, thetaY, thetaZ);
         this.r = r;
     }
 
@@ -25,5 +25,9 @@ public class Sphere extends PhysicsObject3D {
 
     public boolean detectCollision(Cube c) {
         return c.detectCollision(this);
+    }
+
+    public static double calculateVolume(double r) {
+        return 4.0 / 3.0 * Math.PI * Math.pow(r, 3);
     }
 }

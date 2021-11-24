@@ -14,8 +14,8 @@ public class PhysicsObjectTests {
         double w = 4, h = 4, d = 4, r = 2, cx = 1, cy = 2, cz = 3, theta = 90;
         Circle circle1 = new Circle(0, 0, 0, 0), circle2 = new Circle(r, 0, 0, 0);
         Square square1 = new Square(0, 0, 0, 0, 0), square2 = new Square(w, h, 0, 0, 0);
-        Sphere sphere1 = new Sphere(0, 0, 0, 0, 0, 0, 0), sphere2 = new Sphere(r, 0, 0, 0, 0, 0, 0);
-        Cube cube1 = new Cube(0, 0, 0, 0, 0, 0, 0, 0, 0), cube2 = new Cube(w, h, d, 0, 0, 0, 0, 0, 0);
+        Sphere sphere1 = new Sphere(0, 0, 0, 0, 0, 0, 0, 0), sphere2 = new Sphere(0, r, 0, 0, 0, 0, 0, 0);
+        Cube cube1 = new Cube(0, 0, 0, 0, 0, 0, 0, 0, 0, 0), cube2 = new Cube(0, w, h, d, 0, 0, 0, 0, 0, 0);
 
         // Test getters and setters
         circle1.setCx(cx);

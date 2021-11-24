@@ -6,8 +6,8 @@ import com.mistrmouse.physics.PhysicsObject2D;
 public class Circle extends PhysicsObject2D {
     private double r;
 
-    public Circle(double r, double cx, double cy, double theta) {
-        super(cx, cy, theta);
+    public Circle(double density, double r, double cx, double cy, double theta) {
+        super(r * r, density, cx, cy, theta);
         this.r = r;
     }
 

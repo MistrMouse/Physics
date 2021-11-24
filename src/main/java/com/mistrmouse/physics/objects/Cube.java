@@ -5,8 +5,8 @@ import com.mistrmouse.physics.PhysicsObject3D;
 
 public class Cube extends PhysicsObject3D {
     private double w, h, d;
-    public Cube(double w, double h, double d, double cx, double cy, double cz, double thetaX, double thetaY, double thetaZ) {
-        super(cx, cy, cz, thetaX, thetaY, thetaY);
+    public Cube(double density, double w, double h, double d, double cx, double cy, double cz, double thetaX, double thetaY, double thetaZ) {
+        super(calculateVolume(w, h, d), density, cx, cy, cz, thetaX, thetaY, thetaY);
         this.w = w;
         this.h = h;
         this.d = d;
@@ -42,5 +42,9 @@ public class Cube extends PhysicsObject3D {
 
     public boolean detectCollision(Cube c) {
         return Distance.betweenCubes(w, h, d, getCx(), getCy(), getCz(), getThetaX(), getThetaY(), getThetaZ(), c.getW(), c.getH(), c.getD(), c.getCx(), c.getCy(), c.getCz(), c.getThetaX(), c.getThetaY(), c.getThetaZ()) < 0;
+    }
+
+    public static double calculateVolume(double w, double h, double d) {
+        return w * h * d;
     }
 }

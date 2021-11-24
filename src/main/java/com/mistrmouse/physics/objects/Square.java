@@ -5,8 +5,8 @@ import com.mistrmouse.physics.PhysicsObject2D;
 
 public class Square extends PhysicsObject2D {
     private double w, h;
-    public Square(double w, double h, double cx, double cy, double theta) {
-        super(cx, cy, theta);
+    public Square(double density, double w, double h, double cx, double cy, double theta) {
+        super(w * h, density, cx, cy, theta);
         this.w = w;
         this.h = h;
     }

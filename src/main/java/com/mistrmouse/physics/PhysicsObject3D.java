@@ -1,9 +1,12 @@
 package com.mistrmouse.physics;
 
 public abstract class PhysicsObject3D {
+    public final double volume, density;
     private double cx, cy, cz, thetaX, thetaY, thetaZ;
 
-    public PhysicsObject3D(double cx, double cy, double cz, double thetaX, double thetaY, double thetaZ) {
+    public PhysicsObject3D(double volume, double density, double cx, double cy, double cz, double thetaX, double thetaY, double thetaZ) {
+        this.volume = volume;
+        this.density = density;
         this.cx = cx;
         this.cy = cy;
         this.cz = cz;
