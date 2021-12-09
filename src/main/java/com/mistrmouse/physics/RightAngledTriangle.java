@@ -11,7 +11,7 @@ public class RightAngledTriangle {
     // 180 = 90 + theta1 + theta2
     // 90 = theta1 + theta2
     public static double solveForMissingAngle(double theta) {
-        return 90 - theta;
+        return (theta > 0) ? 90 - theta : -90 - theta;
     }
 
     // When dealing with right angles, then we can solve for

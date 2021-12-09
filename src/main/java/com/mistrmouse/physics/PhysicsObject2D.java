@@ -1,15 +1,16 @@
 package com.mistrmouse.physics;
 
 public abstract class PhysicsObject2D {
-    public final double volume, density;
-    private double cx, cy, theta;
+    public final double area, density, mass;
+    private double cx, cy, theta, xVelocity, yVelocity;
 
-    public PhysicsObject2D(double volume, double density, double cx, double cy, double theta) {
-        this.volume = volume;
+    public PhysicsObject2D(double area, double density, double cx, double cy, double theta) {
+        this.area = area;
         this.density = density;
         this.cx = cx;
         this.cy = cy;
         this.theta = theta;
+        mass = area * density;
     }
 
     public double getCx() {
@@ -24,6 +25,14 @@ public abstract class PhysicsObject2D {
         return theta;
     }
 
+    public double getXVelocity() {
+        return xVelocity;
+    }
+
+    public double getYVelocity() {
+        return yVelocity;
+    }
+
     public void setCx(double cx) {
         this.cx = cx;
     }
@@ -34,5 +43,13 @@ public abstract class PhysicsObject2D {
 
     public void setTheta(double theta) {
         this.theta = theta;
+    }
+
+    public void setXVelocity(double xVelocity) {
+        this.xVelocity = xVelocity;
+    }
+
+    public void setYVelocity(double yVelocity) {
+        this.yVelocity = yVelocity;
     }
 }

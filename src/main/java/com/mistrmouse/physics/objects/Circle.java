@@ -7,7 +7,7 @@ public class Circle extends PhysicsObject2D {
     private double r;
 
     public Circle(double density, double r, double cx, double cy, double theta) {
-        super(r * r, density, cx, cy, theta);
+        super(calculateArea(r), density, cx, cy, theta);
         this.r = r;
     }
 
@@ -25,5 +25,9 @@ public class Circle extends PhysicsObject2D {
 
     public boolean detectCollision(Square s) {
         return s.detectCollision(this);
+    }
+
+    public static double calculateArea(double r) {
+        return Math.PI * r * r;
     }
 }
